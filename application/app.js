@@ -17,7 +17,6 @@ const app = () => {
   const startButtonRobot = document.querySelector('#start-button_player');
   let timerIdRobot;
   let scoreRobot = 0;
-  let fastenerTimerRobot;
   let isRobotGameOver = false;
 
   const colors = [
@@ -230,15 +229,7 @@ const app = () => {
       timerId = setInterval(moveDown, time); 
       document.addEventListener('keydown', control);   
       drawRobot();
-      fastenerTimerRobot = setInterval(() => {
-        if (time > 400) {
-          time -= 100;
-        }
-        clearInterval(timerIdRobot);
-        timerIdRobot = setInterval(moveDownRobot, time);
-      }, 20000);
-      timerIdRobot = setInterval(moveDownRobot, time); 
-      ///document.addEventListener('keydown', controlRobot);   
+      timerIdRobot = setInterval(moveDownRobot, 200); 
     }
     isRobotGameOver = false;
     isPlayerGameOver = false;
@@ -285,7 +276,7 @@ const app = () => {
   function gameOver() {
     erase();
     draw();
-    if(current.some(index => squares[currentPosition + index].classList.contains('taken')) || isRobotGameOver) {
+    if(current.some(index => squares[currentPosition + index].classList.contains('taken')) || isRobotGameOver || getMaxHeight(squares) >= 16) {
       clearInterval(timerId);
       clearInterval(fastenerTimer);
       fastenerTimer = null;
@@ -299,7 +290,7 @@ const app = () => {
     }
   }
 
-//robotresz
+//robot part
 
 let currentPositionRobot = 4;
 let currentRotationRobot = 0;
@@ -345,7 +336,7 @@ function controlRobot() {
       moveRightRobot();
       ind++;
     }
-  }, 100);
+  }, 50);
 
 }
 
@@ -453,10 +444,8 @@ function addscoreRobot() {
 function gameOverRobot() {
   eraseRobot()
   drawRobot()
-  if(currentRobot.some(index => squaresRobot[currentPositionRobot + index].classList.contains('taken')) || isPlayerGameOver) {
+  if(currentRobot.some(index => squaresRobot[currentPositionRobot + index].classList.contains('taken')) || isPlayerGameOver || getMaxHeight(squaresRobot) >= 16) {
     clearInterval(timerIdRobot);
-    clearInterval(fastenerTimerRobot);
-    fastenerTimerRobot = null;
     time = 1000;
     timerIdRobot = null;
     isFirstStart = true;
@@ -496,8 +485,8 @@ function calculateAggregateHeight() {
   {
     aggHeight += height[i];
   }
+
   return aggHeight;
-  
 }
 
 //Ha nem mukodik ezt kell ellenorizzem
@@ -623,11 +612,30 @@ function moveToBottomRobot(shape, position) {
   while(!onTheBottom(shape, position)) {
     position += width;
   }
+  
   return position;
 }
 
 function onTheBottom(shape, position) {
   return shape.some(index => squaresRobot[position + index + width].classList.contains('taken'))
+}
+
+
+function getMaxHeight(whichSquares) {
+  height = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  for (let i = 0; i < 200; i++) {
+    if (whichSquares[i].classList.contains('taken') && height[i%10] === 0) {
+      i%10 === 0 ? height[i%10] = Math.floor((200 - i) /10) : height[i%10] = Math.floor((200 - i) /10) + 1;
+    }
+  }
+  maxi = height[0];
+  for (let i = 1; i< 10; i++) {
+    if (height[i] > maxi) {
+      maxi = height[i];
+    }
+  }
+
+  return maxi;
 }
 
 };
