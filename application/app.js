@@ -132,9 +132,11 @@ const app = () => {
       random = Math.floor(Math.random() * shapes.length);
       current = shapes[random][currentRotation];
       currentPosition = 4;
-      draw();
       addScore();
       gameOver();
+      if (!isRobotGameOver) {
+        draw();
+      }
     }
   }
 
@@ -229,7 +231,7 @@ const app = () => {
       timerId = setInterval(moveDown, time); 
       document.addEventListener('keydown', control);   
       drawRobot();
-      timerIdRobot = setInterval(moveDownRobot, 200); 
+      timerIdRobot = setInterval(moveDownRobot, 250); 
     }
     isRobotGameOver = false;
     isPlayerGameOver = false;
@@ -276,7 +278,7 @@ const app = () => {
   function gameOver() {
     erase();
     draw();
-    if(current.some(index => squares[currentPosition + index].classList.contains('taken')) || isRobotGameOver || getMaxHeight(squares) >= 16) {
+    if(current.some(index => squares[currentPosition + index].classList.contains('taken')) || isRobotGameOver || getMaxHeight(squares) >= 17) {
       clearInterval(timerId);
       clearInterval(fastenerTimer);
       fastenerTimer = null;
@@ -336,7 +338,7 @@ function controlRobot() {
       moveRightRobot();
       ind++;
     }
-  }, 50);
+  }, 30);
 
 }
 
@@ -444,7 +446,7 @@ function addscoreRobot() {
 function gameOverRobot() {
   eraseRobot()
   drawRobot()
-  if(currentRobot.some(index => squaresRobot[currentPositionRobot + index].classList.contains('taken')) || isPlayerGameOver || getMaxHeight(squaresRobot) >= 16) {
+  if(currentRobot.some(index => squaresRobot[currentPositionRobot + index].classList.contains('taken')) || isPlayerGameOver || getMaxHeight(squaresRobot) >= 17) {
     clearInterval(timerIdRobot);
     time = 1000;
     timerIdRobot = null;
@@ -535,6 +537,7 @@ function calculateBumpiness() {
 function chooseTheBest() {
   let copy_current;
   let position;
+  let fitness;
   let bestScore = null;
   let rotationNumber = 0;
   let colNumber = 0;
@@ -561,9 +564,9 @@ function chooseTheBest() {
       let cmpltLines = completeLines();
       let nrOfHoles = calculateNumberOfHoles();
       let bumpiness = calculateBumpiness();
-      score = score = -0.510066 * height + 0.760666 * cmpltLines - 0.35663 * nrOfHoles - 0.184483 * bumpiness;
-      if (score > bestScore || bestScore === null) {
-        bestScore = score;
+      fitness = -0.510066 * height + 0.760666 * cmpltLines - 0.35663 * nrOfHoles - 0.184483 * bumpiness;
+      if (fitness > bestScore || bestScore === null) {
+        bestScore = fitness;
         rotationNumber = i;
         colNumber = cNr;
       }
@@ -612,7 +615,7 @@ function moveToBottomRobot(shape, position) {
   while(!onTheBottom(shape, position)) {
     position += width;
   }
-  
+
   return position;
 }
 
