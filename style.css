@@ -1,0 +1,49 @@
+body {
+  background-color: #5260e6;
+}
+
+.body_grids {
+  background-color: #5260e6;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: space-around;
+}
+
+.grid_player {
+  width: 300px;
+  height: 600px;
+  display:flex;
+  flex-wrap: wrap;
+  background-color: whitesmoke;
+  border-style: solid;
+}
+
+.grid_player div {
+  height: 30px;
+  width: 30px;
+}
+
+.shape {
+  border-radius: 4px;
+}
+
+#start-button_player {
+  margin-bottom: 10px;
+}
+
+.grid_robot {
+  width: 300px;
+  height: 600px;
+  display:flex;
+  flex-wrap: wrap;
+  background-color: whitesmoke;
+  border-style: solid;
+  margin-top: 50px;
+}
+
+.grid_robot div {
+  height: 30px;
+  width: 30px;
+}
